@@ -1,0 +1,3 @@
+[submodule "src/ros2_crsf_receiver"]
+	path = src/ros2_crsf_receiver
+	url = https://github.com/AndreyTulyakov/ros2_crsf_receiver.git
