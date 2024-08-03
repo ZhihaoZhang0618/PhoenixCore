@@ -1,10 +1,6 @@
 [submodule "src/ros2_crsf_receiver"]
 	path = src/ros2_crsf_receiver
 	url = https://github.com/AndreyTulyakov/ros2_crsf_receiver.git
-[submodule "vesc"]
-	path = vesc
-	url = https://github.com/f1tenth/vesc.git
-	branch = ros2
 [submodule "src/vesc"]
 	path = src/vesc
 	url = https://github.com/f1tenth/vesc.git

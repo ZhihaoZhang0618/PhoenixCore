@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/nv/babybus_ws/install/vesc_msgs/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/nv/babybus_ws/src/ros2_crsf_receiver/crsf_receiver/include/**",
+        "/home/nv/babybus_ws/src/vesc/vesc_ackermann/include/**",
+        "/home/nv/babybus_ws/src/vesc/vesc_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-arm64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
