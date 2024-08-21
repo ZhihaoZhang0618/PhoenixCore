@@ -3,5 +3,5 @@
 	url = https://github.com/AndreyTulyakov/ros2_crsf_receiver.git
 [submodule "src/vesc"]
 	path = src/vesc
-	url = https://github.com/f1tenth/vesc.git
-	branch = ros2
+	url = https://github.com/z1047941150/vesc.git
+
