@@ -73,6 +73,7 @@ private:
   std::string serial_port_;
   int serial_baud_;
   int serial_timeout_;
+  bool only_imu_;
   //data
   FDILink::imu_frame_read  imu_frame_;
   FDILink::ahrs_frame_read ahrs_frame_;

@@ -46,6 +46,8 @@ ahrsBringup::ahrsBringup()
   this->declare_parameter<std::int64_t>("serial_baud_",921600);
   this->get_parameter("serial_baud_", serial_baud_);  
 
+  this->declare_parameter<bool>("only_imu_",true);
+  this->get_parameter("only_imu_", only_imu_);  
   //pravite_nh.param("debug",     if_debug_,  false);
   //pravite_nh.param("device_type", device_type_, 1); // default: single imu
   // pravite_nh.param("imu_topic", imu_topic_, std::string("/imu"));
@@ -60,6 +62,7 @@ ahrsBringup::ahrsBringup()
   
   //publisher
   imu_pub_ = create_publisher<sensor_msgs::msg::Imu>(imu_topic.c_str(), 10);
+  if(!only_imu_){
   gps_pub_ = create_publisher<sensor_msgs::msg::NavSatFix>(gps_topic.c_str(), 10);
 
   mag_pose_pub_ = create_publisher<geometry_msgs::msg::Pose2D>(mag_pose_2d_topic.c_str(), 10);
@@ -69,6 +72,8 @@ ahrsBringup::ahrsBringup()
  
   twist_pub_ = create_publisher<geometry_msgs::msg::Twist>(twist_topic.c_str(), 10);
   NED_odom_pub_ = create_publisher<nav_msgs::msg::Odometry>(NED_odom_topic.c_str(), 10);
+  }
+
 
 
   //setp up serial  设置串口参数并打开串口
@@ -494,7 +499,7 @@ void ahrsBringup::processLoop()  // 数据处理过程
       imu_pub_->publish(imu_data);
 }
     //读取AHRS数据进行解析，并发布相关话题
-    else if (head_type[0] == TYPE_AHRS)
+    else if (head_type[0] == TYPE_AHRS && !only_imu_)
     {
       geometry_msgs::msg::Pose2D pose_2d;
       pose_2d.theta = ahrs_frame_.frame.data.data_pack.Heading;
@@ -514,7 +519,7 @@ void ahrsBringup::processLoop()  // 数据处理过程
     }
 
     //读取gps_pos数据进行解析，并发布相关话题
-    else if (head_type[0] == TYPE_GEODETIC_POS)
+    else if (head_type[0] == TYPE_GEODETIC_POS && !only_imu_)
     {
       sensor_msgs::msg::NavSatFix gps_data;
       gps_data.header.stamp = rclcpp::Node::now();
@@ -530,7 +535,7 @@ void ahrsBringup::processLoop()  // 数据处理过程
       gps_pub_->publish(gps_data);
     } 
     //读取INSGPS数据进行解析，并发布相关话题
-    else if (head_type[0] == TYPE_INSGPS)
+    else if (head_type[0] == TYPE_INSGPS && !only_imu_)
     {
       nav_msgs::msg::Odometry odom_msg;
       odom_msg.header.stamp = rclcpp::Node::now(); 

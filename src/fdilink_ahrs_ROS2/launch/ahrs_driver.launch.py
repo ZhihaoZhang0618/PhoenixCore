@@ -16,7 +16,7 @@ def generate_launch_description():
         package="fdilink_ahrs",
         executable="ahrs_driver_node",
         parameters=[{'if_debug_': False,
-            'serial_port_':'/dev/fdilink_ahrs',
+            'serial_port_':'/dev/ttyIMU',
             'serial_baud_':921600,
             'imu_topic':'/imu',
             'imu_frame_id_':'gyro_link',
@@ -26,6 +26,7 @@ def generate_launch_description():
             'gps_topic':'/gps/fix',
             'twist_topic':'/system_speed',
             'NED_odom_topic':'/NED_odometry',
+            'only_imu_':True,
             'device_type_':1}],
         output="screen"
     )
