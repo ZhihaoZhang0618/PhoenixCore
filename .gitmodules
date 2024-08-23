@@ -1,7 +1,12 @@
 [submodule "src/ros2_crsf_receiver"]
 	path = src/ros2_crsf_receiver
 	url = https://github.com/AndreyTulyakov/ros2_crsf_receiver.git
+[submodule "src/3i-T1_ROS2"]
+	path = src/3i-T1_ROS2
+	url = https://github.com/z1047941150/3i-T1_ROS2.git
 [submodule "src/vesc"]
 	path = src/vesc
 	url = https://github.com/z1047941150/vesc.git
-
+[submodule "src/ackermann_mux"]
+	path = src/ackermann_mux
+	url = https://github.com/z1047941150/ackermann_mux.git
