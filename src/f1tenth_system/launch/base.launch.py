@@ -49,11 +49,20 @@ def generate_launch_description():
         'params',
         'mux.yaml'
     )
-
+    # ekf_config = os.path.join(
+    #     get_package_share_directory('f1tenth_system'),
+    #     'params',
+    #     'ekf.yaml'
+    # )
     mux_la = DeclareLaunchArgument(
         'mux_config',
         default_value=mux_config,
         description='Descriptions for ackermann mux configs')
+
+    # ekf_la = DeclareLaunchArgument(
+    #     'ekf_config',
+    #     default_value=ekf_config,
+    #     description='Descriptions for ackermann mux configs')
 
     ld = LaunchDescription([vesc_la,mux_la])
 
@@ -68,6 +77,45 @@ def generate_launch_description():
             {'link_stats': True}
         ],
         output='screen'
+    )
+
+    imu_driver=Node(
+    package="fdilink_ahrs",
+    executable="ahrs_driver_node",
+    parameters=[{'if_debug_': False,
+        'serial_port_':'/dev/ttyIMU',
+        'serial_baud_':921600,
+        'imu_topic':'/imu',
+        'imu_frame_id_':'imu_link',
+        'mag_pose_2d_topic':'/mag_pose_2d',
+        'Magnetic_topic':'/magnetic',
+        'Euler_angles_topic':'/euler_angles',
+        'gps_topic':'/gps/fix',
+        'twist_topic':'/system_speed',
+        'NED_odom_topic':'/NED_odometry',
+        'only_imu_':True,
+        'device_type_':1}],
+    output="screen"
+    )
+
+    lidar_driver = Node(
+      package="ltme_node", executable="ltme_node",
+      output="screen",
+      parameters=[
+        { "device_model": "LTME-02A" },
+        { "device_address": "192.168.10.160" },
+        { "frame_id": "laser" },
+        # { "invert_frame": False },
+        # { "angle_min": -1.571 },
+        # { "angle_max": 1.571 },
+        # { "angle_excluded_min": -0.785 },
+        # { "angle_excluded_max": 0.785 },
+        { "range_min": 0.20 },
+        # { "range_max": 30 },
+        # { "average_factor": 2 },
+        # { "shadow_filter_strength": 15 },
+        { "scan_frequency_override": 30 }
+      ]
     )
     
     joystick_control_node = Node(
@@ -103,7 +151,13 @@ def generate_launch_description():
         name='vesc_driver_node',
         parameters=[LaunchConfiguration('vesc_config')]
     )
-
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[os.path.join(get_package_share_directory("f1tenth_system"), 'params', 'ekf.yaml')],
+    )
     static_tf_node_bl = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -120,9 +174,13 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_baselink_to_imu',
-        arguments=['0.00', '0.0', '0.05', '0.0', '0.0', '0.7071068', '0.7071068', 'base_link', 'imu']
+        arguments=['0.00', '0.0', '0.05', '0.0', '0.0', '0.7071068', '0.7071068', 'base_link', 'imu_link']
     )
-
+    base_footprint_to_base_link = Node(package = "tf2_ros", 
+                       executable = "static_transform_publisher",
+                       name="base_link_to_base_footprint",
+                       arguments = ["0", "0", "0", "0", "0", "0", "base_link", "base_footprint"])
+    ld.add_action(base_footprint_to_base_link)
     # finalize
  
     ld.add_action(ackermann_to_vesc_node)
@@ -132,6 +190,9 @@ def generate_launch_description():
     ld.add_action(crsf_receiver_node)
     ld.add_action(joystick_control_node)
     ld.add_action(ackermann_mux_node)
+    ld.add_action(imu_driver)
+    ld.add_action(lidar_driver)
+    ld.add_action(robot_localization_node)
 
 
     ld.add_action(static_tf_node_bl)
