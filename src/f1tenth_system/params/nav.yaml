@@ -1,11 +1,11 @@
 /**: # stack-wide parameters
   ros__parameters:
-    use_sim_time: True
-    global_frame: track
+    use_sim_time: false
+    global_frame: map
     local_frame: odom
     robot_base_frame: base_link
     # robot_radius: 1.0
-    footprint: "[ [1.7, 0.9], [1.7, -0.9], [-1.2, -0.9], [-1.2, 0.9] ]"
+    footprint: "[ [0.3, 0.2], [0.3, -0.2], [-0.3, -0.2], [-0.3, 0.2] ]"
 
 bt_navigator:
   ros__parameters:
@@ -76,8 +76,8 @@ behavior_server:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 1.0
+      update_frequency: 5.0
+      publish_frequency: 5.0
       resolution: 0.1
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -92,9 +92,9 @@ global_costmap:
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 20.0
-          raytrace_min_range: 0.0
+          raytrace_min_range: 0.2
           obstacle_max_range: 20.0
-          obstacle_min_range: 0.0
+          obstacle_min_range: 0.2
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -107,8 +107,8 @@ global_costmap:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 10.0
-      publish_frequency: 10.0
+      update_frequency: 20.0
+      publish_frequency: 20.0
       rolling_window: true
       width: 10
       height: 10
@@ -135,9 +135,9 @@ local_costmap:
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 20.0
-          raytrace_min_range: 0.0
+          raytrace_min_range: 0.2
           obstacle_max_range: 20.0
-          obstacle_min_range: 0.0
+          obstacle_min_range: 0.2
       static_layer:
         map_subscribe_transient_local: True
       always_send_full_costmap: True
@@ -160,7 +160,7 @@ planner_server:
       angle_quantization_bins: 64         # For Hybrid nodes: Number of angle bins for search, must be 1 for 2D node (no angle search)
       analytic_expansion_ratio: 3.5       # For Hybrid/Lattice nodes: The ratio to attempt analytic expansions during search for final approach.
       analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting (in meters). This should be scaled with minimum turning radius and be no less than 4-5x the minimum radius
-      minimum_turning_radius: 7.0         # For Hybrid/Lattice nodes: minimum turning radius in m of path / vehicle
+      minimum_turning_radius: 0.6         # For Hybrid/Lattice nodes: minimum turning radius in m of path / vehicle
       # reverse_penalty: 2.1              # For Reeds-Shepp model: penalty to apply if motion is reversing, must be => 1
       change_penalty: 0.0                 # For Hybrid nodes: penalty to apply if motion is changing directions, must be >= 0
       non_straight_penalty: 2.0          # For Hybrid nodes: penalty to apply if motion is non-straight, must be => 1
@@ -175,7 +175,7 @@ planner_server:
 
 controller_server:
   ros__parameters:
-    controller_frequency: 20.0
+    controller_frequency: 50.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -198,7 +198,7 @@ controller_server:
     # Controller parameters
     RegulatedPurePursuit:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 8.0  # The desired maximum linear velocity to use.
+      desired_linear_vel: 4.0  # The desired maximum linear velocity to use.
       lookahead_dist: 2.5  # The lookahead distance to use to find the lookahead point.
       # min_lookahead_dist: 3.0  # The minimum lookahead distance threshold when using velocity scaled lookahead distances.
       # max_lookahead_dist: 5.0  # The maximum lookahead distance threshold when using velocity scaled lookahead distances.

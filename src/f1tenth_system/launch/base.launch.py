@@ -110,7 +110,7 @@ def generate_launch_description():
         # { "angle_max": 1.571 },
         # { "angle_excluded_min": -0.785 },
         # { "angle_excluded_max": 0.785 },
-        { "range_min": 0.20 },
+        { "range_min": 0.6 },
         # { "range_max": 30 },
         # { "average_factor": 2 },
         # { "shadow_filter_strength": 15 },
