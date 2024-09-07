@@ -16,7 +16,7 @@ slam_toolbox:
     base_frame: base_link
     scan_topic: /scan
     use_map_saver: true
-    mode: mapping
+    mode: localization # localization, mapping, or lifelong_mapping
 
     # lifelong params
     lifelong_search_use_tree: false
@@ -31,9 +31,10 @@ slam_toolbox:
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
-    map_file_name: flyplace
-    #map_start_pose: [0.0, 0.0, 0.0]
-    map_start_at_dock: true
+    map_file_name: test
+    map_start_pose: [12.0, 1.8,3.126]
+
+    # map_start_at_dock: true
 
     debug_logging: false
     throttle_scans: 1

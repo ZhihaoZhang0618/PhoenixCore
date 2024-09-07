@@ -5,7 +5,7 @@
     local_frame: odom
     robot_base_frame: base_link
     # robot_radius: 1.0
-    footprint: "[ [0.3, 0.2], [0.3, -0.2], [-0.3, -0.2], [-0.3, 0.2] ]"
+    footprint: "[ [0.5, 0.3], [0.5, -0.3], [-0.5, -0.3], [-0.5, 0.3] ]"
 
 bt_navigator:
   ros__parameters:
@@ -100,8 +100,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 0.5
-        inflation_radius: 3.0
+        cost_scaling_factor: 1.6
+        inflation_radius: 0.8
       always_send_full_costmap: True
 
 local_costmap:
@@ -110,14 +110,14 @@ local_costmap:
       update_frequency: 20.0
       publish_frequency: 20.0
       rolling_window: true
-      width: 10
-      height: 10
+      width: 15
+      height: 15
       resolution: 0.1
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 1.0
-        inflation_radius: 1.0
+        inflation_radius: 0.6
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -159,7 +159,7 @@ planner_server:
       cost_travel_multiplier: 1.0         # For 2D: Cost multiplier to apply to search to steer away from high cost areas. Larger values will place in the center of aisles more exactly (if non-`FREE` cost potential field exists) but take slightly longer to compute. To optimize for speed, a value of 1.0 is reasonable. A reasonable tradeoff value is 2.0. A value of 0.0 effective disables steering away from obstacles and acts like a naive binary search A*.
       angle_quantization_bins: 64         # For Hybrid nodes: Number of angle bins for search, must be 1 for 2D node (no angle search)
       analytic_expansion_ratio: 3.5       # For Hybrid/Lattice nodes: The ratio to attempt analytic expansions during search for final approach.
-      analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting (in meters). This should be scaled with minimum turning radius and be no less than 4-5x the minimum radius
+      analytic_expansion_max_length: 2.5  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting (in meters). This should be scaled with minimum turning radius and be no less than 4-5x the minimum radius
       minimum_turning_radius: 0.6         # For Hybrid/Lattice nodes: minimum turning radius in m of path / vehicle
       # reverse_penalty: 2.1              # For Reeds-Shepp model: penalty to apply if motion is reversing, must be => 1
       change_penalty: 0.0                 # For Hybrid nodes: penalty to apply if motion is changing directions, must be >= 0
@@ -175,7 +175,7 @@ planner_server:
 
 controller_server:
   ros__parameters:
-    controller_frequency: 50.0
+    controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -185,6 +185,8 @@ controller_server:
     controller_plugins: ["RegulatedPurePursuit"]
 
     # Progress checker parameters
+    # refrence link:https://navigation.ros.org/configuration/packages/configuring-regulated-pp.html
+    # https://blog.csdn.net/qq_27865227/article/details/124376008
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
@@ -198,26 +200,26 @@ controller_server:
     # Controller parameters
     RegulatedPurePursuit:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 4.0  # The desired maximum linear velocity to use.
-      lookahead_dist: 2.5  # The lookahead distance to use to find the lookahead point.
-      # min_lookahead_dist: 3.0  # The minimum lookahead distance threshold when using velocity scaled lookahead distances.
-      # max_lookahead_dist: 5.0  # The maximum lookahead distance threshold when using velocity scaled lookahead distances.
-      lookahead_time: 1.5  # The time to project the velocity by to find the velocity scaled lookahead distance. Also known as the lookahead gain.
+      desired_linear_vel: 3.2  # The desired maximum linear velocity to use.
+      lookahead_dist: 1.5  # The lookahead distance to use to find the lookahead point. lookahead_dist = min_radius_in_path * k k between 1.0 and 2.0
+      min_lookahead_dist: 1.0  # The minimum lookahead distance threshold when using velocity scaled lookahead distances.
+      max_lookahead_dist: 2.5  # The maximum lookahead distance threshold when using velocity scaled lookahead distances.
+      lookahead_time: 0.8  # The time to project the velocity by to find the velocity scaled lookahead distance. Also known as the lookahead gain.
       # rotate_to_heading_angular_vel: 1.8  # If rotate to heading is used, this is the angular velocity to use.
       transform_tolerance: 0.3  # The TF transform tolerance.
-      use_velocity_scaled_lookahead_dist: false  # Whether to use the velocity scaled lookahead distances or constant lookahead_distance.
-      min_approach_linear_velocity: 3.0  # The minimum velocity threshold to apply when approaching the goal.
+      use_velocity_scaled_lookahead_dist: true  # Whether to use the velocity scaled lookahead distances or constant lookahead_distance.
+      min_approach_linear_velocity: 2.0  # The minimum velocity threshold to apply when approaching the goal.
       approach_velocity_scaling_dist: 1.0  # Integrated distance from end of transformed path at which to start applying velocity scaling.
       use_collision_detection: false  # Whether to enable collision detection.
-      # max_allowed_time_to_collision_up_to_carrot: 2.0  # The time to project a velocity command to check for collisions when use_collision_detection is true.
-      use_regulated_linear_velocity_scaling: false  # Whether to use the regulated features for curvature.
+      max_allowed_time_to_collision_up_to_carrot: 1.0  # The time to project a velocity command to check for collisions when use_collision_detection is true.
+      use_regulated_linear_velocity_scaling: true  # Whether to use the regulated features for curvature.
       use_cost_regulated_linear_velocity_scaling: false  # Whether to use the regulated features for proximity to obstacles.
       cost_scaling_dist: 1.0  # The minimum distance from an obstacle to trigger the scaling of linear velocity, if use_cost_regulated_linear_velocity_scaling is enabled. 
       cost_scaling_gain: 1.0  # A multiplier gain, which should be <= 1.0, used to further scale the speed when an obstacle is within cost_scaling_dist.
       inflation_cost_scaling_factor: 0.5  # The value of cost_scaling_factor set for the inflation layer in the local costmap.
         # The value should be exactly the same for accurately computing distance from obstacles using the inflated cell values
-      regulated_linear_scaling_min_radius: 0.9  # The turning radius for which the regulation features are triggered.
-      regulated_linear_scaling_min_speed: 0.25  # The minimum speed for which the regulated features can send, to ensure process is still achievable even in high cost spaces with high curvature.
+      regulated_linear_scaling_min_radius: 4.0  # The turning radius for which the regulation features are triggered.
+      regulated_linear_scaling_min_speed: 1.5  # The minimum speed for which the regulated features can send, to ensure process is still achievable even in high cost spaces with high curvature.
       use_fixed_curvature_lookahead: false  # Enable fixed lookahead for curvature detection. Useful for systems with long lookahead.
       curvature_lookahead_dist: 1.0  # Distance to lookahead to determine curvature for velocity regulation purposes if use_fixed_curvature_lookahead is enabled.
       use_rotate_to_heading: false  # Whether to enable rotating to rough heading and goal orientation when using holonomic planners.
