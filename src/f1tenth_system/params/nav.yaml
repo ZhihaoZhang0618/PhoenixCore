@@ -201,7 +201,7 @@ controller_server:
     RegulatedPurePursuit:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       desired_linear_vel: 3.2  # The desired maximum linear velocity to use.
-      lookahead_dist: 1.5  # The lookahead distance to use to find the lookahead point. lookahead_dist = min_radius_in_path * k k between 1.0 and 2.0
+      lookahead_dist: 1.0  # The lookahead distance to use to find the lookahead point. lookahead_dist = min_radius_in_path * k k between 1.0 and 2.0
       min_lookahead_dist: 1.0  # The minimum lookahead distance threshold when using velocity scaled lookahead distances.
       max_lookahead_dist: 2.5  # The maximum lookahead distance threshold when using velocity scaled lookahead distances.
       lookahead_time: 0.8  # The time to project the velocity by to find the velocity scaled lookahead distance. Also known as the lookahead gain.

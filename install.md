@@ -4,8 +4,8 @@ sudo apt install net-tools
  sudo service ssh status
 ifconfig 
 
-wget https://download.nomachine.com/download/8.13/Linux/nomachine_8.13.1_1_i386.deb
-sudo dpkg -i nomachine_8.13.1_1_i386.deb 
+wget https://download.nomachine.com/download/8.13/Linux/nomachine_8.13.1_1_amd64.deb
+sudo dpkg -i nomachine_8.13.1_1_amd64.deb
 
 
 sudo apt install zsh git curl terminator vim -y
@@ -36,7 +36,7 @@ wget http://fishros.com/install -O fishros && bash fishros
 
 
 git clone https://github.com/gbmhunter/CppLinuxSerial.git
-mkdir build && cd build
+mkdir build && cd buildhttps://download.nomachine.com/download/8.13/Linux/nomachine_8.13.1_1_amd64.deb
 cmake .. && make
 sudo make install
 
@@ -53,4 +53,6 @@ setopt no_nomatch && sudo apt install ros-humble-udp-msgs* ros-humble-ackermann-
 git clone --recursive git@github.com:z1047941150/PhoenixCore.git
 cd PhoenixCore && colcon build 
 sudo cp rules/*.rules /etc/udev/rules.d
+
+sudo apt remove brltty
 #### modify wire ip
