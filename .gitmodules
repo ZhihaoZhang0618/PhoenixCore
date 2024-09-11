@@ -10,3 +10,6 @@
 [submodule "src/ackermann_mux"]
 	path = src/ackermann_mux
 	url = https://github.com/z1047941150/ackermann_mux.git
+[submodule "src/urg_node2"]
+	path = src/urg_node2
+	url = https://github.com/Hokuyo-aut/urg_node2.git

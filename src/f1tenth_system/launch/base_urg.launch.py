@@ -49,21 +49,24 @@ def generate_launch_description():
         'params',
         'mux.yaml'
     )
-    # ekf_config = os.path.join(
-    #     get_package_share_directory('f1tenth_system'),
-    #     'params',
-    #     'ekf.yaml'
-    # )
+
+    lidar_config = os.path.join(
+        get_package_share_directory('urg_node2'),
+        'config',
+        'params_serial.yaml'
+    )
+
     mux_la = DeclareLaunchArgument(
         'mux_config',
         default_value=mux_config,
         description='Descriptions for ackermann mux configs')
 
-    # ekf_la = DeclareLaunchArgument(
-    #     'ekf_config',
-    #     default_value=ekf_config,
-    #     description='Descriptions for ackermann mux configs')
-    ld = LaunchDescription([vesc_la,mux_la])
+
+    lidar_la = DeclareLaunchArgument(
+        'lidar_config',
+        default_value=lidar_config,
+        description='Descriptions for lidar configs')
+    ld = LaunchDescription([vesc_la,mux_la,lidar_la])
 
 
     crsf_receiver_node = Node(
@@ -98,23 +101,11 @@ def generate_launch_description():
     )
 
     lidar_driver = Node(
-      package="ltme_node", executable="ltme_node",
-      output="screen",
-      parameters=[
-        { "device_model": "LTME-02A" },
-        { "device_address": "192.168.10.160" },
-        { "frame_id": "laser" },
-        # { "invert_frame": False },
-        # { "angle_min": -1.571 },
-        # { "angle_max": 1.571 },
-        # { "angle_excluded_min": -0.785 },
-        # { "angle_excluded_max": 0.785 },
-        { "range_min": 0.3 },
-        # { "range_max": 30 },
-        # { "average_factor": 2 },
-        # { "shadow_filter_strength": 15 },
-        { "scan_frequency_override": 30 }
-      ]
+        package='urg_node2',
+        executable='urg_node2_node',
+        parameters=[LaunchConfiguration('lidar_config')],
+        namespace='',
+        output='screen',
     )
     
     joystick_control_node = Node(
