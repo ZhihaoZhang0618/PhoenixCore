@@ -28,6 +28,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 import os
 
 def generate_launch_description():
@@ -66,7 +67,9 @@ def generate_launch_description():
         'lidar_config',
         default_value=lidar_config,
         description='Descriptions for lidar configs')
-    ld = LaunchDescription([vesc_la,mux_la,lidar_la])
+    ld = LaunchDescription([vesc_la,mux_la])
+
+    lidar_launch_file = os.path.join(os.path.join(get_package_share_directory('urg_node2'), 'launch'), 'urg_node2.launch.py')
 
 
     crsf_receiver_node = Node(
@@ -100,13 +103,12 @@ def generate_launch_description():
     output="screen"
     )
 
-    lidar_driver = Node(
-        package='urg_node2',
-        executable='urg_node2_node',
-        parameters=[LaunchConfiguration('lidar_config')],
-        namespace='',
-        output='screen',
-    )
+    lidar_driver = LaunchDescription([
+        # 包含 package_b 的launch文件
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(lidar_launch_file),
+        ),
+    ])
     
     joystick_control_node = Node(
         package='ackermann_mux',

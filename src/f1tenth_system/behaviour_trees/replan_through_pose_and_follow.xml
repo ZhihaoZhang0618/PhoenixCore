@@ -1,0 +1,54 @@
+<!--
+  This Behavior Tree replans the global path as the vehicle moves at a fixed rate, then follows that path
+-->
+<!--
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence>
+      <RateController hz="1.0">
+        <ComputePathToPose goal="{goal}" path="{path}" planner_id="SmacPlannerHybrid"/>
+      </RateController>
+      <FollowPath path="{path}" controller_id="RegulatedPurePursuit"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>
+-->
+
+
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence>
+      <RateController hz="1.0">
+        <Sequence>
+          <!-- 检查目标点是否已完成并重置 -->
+          <!-- <GoalChecker input_goals="{goals}" output_goals="{goals}"/>-->
+          <!-- 重新计算路径 -->
+          <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="SmacPlannerHybrid"/>
+        </Sequence>
+      </RateController>
+      <!-- 路径跟随 -->
+      <FollowPath path="{path}" controller_id="RegulatedPurePursuit"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>
+
+<!--
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence>
+      <!-- 每秒检查一次目标 -->
+      <RateController hz="1.0">
+        <Sequence>
+          <!-- 检查路径是否完成，如果完成则重置目标点 -->
+          <CheckIfLoopCompleteAndReset input_goals="{goals}" output_goals="{goals}" radius="3.0"/>
+          <!-- 计算闭环路径 -->
+          <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="SmacPlannerHybrid"/>
+        </Sequence>
+      </RateController>
+      <!-- 局部控制器，沿着路径运行 -->
+      <FollowPath path="{path}" controller_id="RegulatedPurePursuit"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>
+-->
+

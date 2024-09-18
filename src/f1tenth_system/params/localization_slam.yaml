@@ -31,10 +31,10 @@ slam_toolbox:
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
-    map_file_name: test
-    map_start_pose: [12.0, 1.8,3.126]
+    map_file_name: positionone
+    # map_start_pose: [12.0, 1.8,3.126]
 
-    # map_start_at_dock: true
+    map_start_at_dock: true
 
     debug_logging: false
     throttle_scans: 1
