@@ -5,11 +5,10 @@
 <root main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
     <PipelineSequence>
-      <RateController hz="1.0">
+      <RateController hz="20.0">
         <ComputePathToPose goal="{goal}" path="{path}" planner_id="SmacPlannerHybrid"/>
       </RateController>
       <FollowPath path="{path}" controller_id="RegulatedPurePursuit"/>
     </PipelineSequence>
   </BehaviorTree>
 </root>
-

@@ -16,7 +16,7 @@ class ComputePathClient(Node):
         self.current_pose = None
 
         # 订阅 odom 以获取当前位置
-        self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+        self.create_subscription(Odometry, '/odometry/filtered', self.odom_callback, 10)
 
         # 创建 tf2 缓存和监听器
         self.tf_buffer = tf2_ros.Buffer()
@@ -29,17 +29,19 @@ class ComputePathClient(Node):
             transform = self.tf_buffer.lookup_transform('map', 'odom', rclpy.time.Time())
 
             # 创建 PoseStamped 对象
+            # map_pose = Odometry()
             odom_pose = PoseStamped()
             odom_pose.header.stamp = self.get_clock().now().to_msg()  # 设置时间戳
-            odom_pose.header.frame_id = 'odom'  # 设置参考坐标系
-            odom_pose.pose = msg.pose.pose  # 复制 msg 中的 pose
-
+            odom_pose.header.frame_id = 'odom' # 设置参考坐标系
+            odom_pose.pose.position = msg.pose.pose.position
+            odom_pose.pose.orientation = msg.pose.pose.orientation
             # 使用转换将 odom_pose 转换为 map 坐标系
-            map_pose = do_transform_pose(odom_pose, transform)
-
+            # map_pose = do_transform_pose(odom_pose, transform)
+            point_in_map = self.tf_buffer.transform(odom_pose, 'map')
+            
+            
             # 更新当前位置为 map 坐标系中的位姿
-            self.current_pose = map_pose.pose
-
+            self.current_pose = point_in_map.pose
         except TransformException as ex:
             self.get_logger().warn(f"Transform from odom to map failed: {ex}")
  
@@ -64,7 +66,7 @@ class ComputePathClient(Node):
         self.pose_publisher.publish(pose)
         self.get_logger().info(f"Published goal: {pose.pose.position.x}, {pose.pose.position.y}")
 
-    def is_near_goal(self, goal_pose, tolerance=0.5):
+    def is_near_goal(self, goal_pose, tolerance=3.0):
         if self.current_pose is None:
             return False
 
@@ -114,21 +116,22 @@ def main(args=None):
         
     ]
 
-    for pose_dict in single_pose_list:
-        # 创建目标点
-        pose = node.create_pose(
-            x=pose_dict['x'],
-            y=pose_dict['y'],
-            z=pose_dict['z'],
-            yaw=pose_dict['yaw']
-        )
-        
-        # 发送目标点
-        node.send_goal(pose)
+    for i in range(5):# 5 loops
+        for pose_dict in single_pose_list:
+            # 创建目标点
+            pose = node.create_pose(
+                x=pose_dict['x'],
+                y=pose_dict['y'],
+                z=pose_dict['z'],
+                yaw=pose_dict['yaw']
+            )
+            
+            # 发送目标点
+            node.send_goal(pose)
 
-        # 等待机器人接近目标点
-        while not node.is_near_goal(pose):
-            rclpy.spin_once(node, timeout_sec=0.1)  # 不断轮询当前位置，检测是否接近目标
+            # 等待机器人接近目标点
+            while not node.is_near_goal(pose):
+                rclpy.spin_once(node, timeout_sec=0.1)  # 不断轮询当前位置，检测是否接近目标
 
     rclpy.shutdown()
 

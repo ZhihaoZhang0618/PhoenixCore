@@ -59,15 +59,27 @@ def generate_launch_description():
 
     # behaviour tree xml file location
     # uncomment the XML you want to test
-    to_pose_bt_xml = os.path.join(bringup_dir, "behaviour_trees", "follow_path.xml")
-    through_poses_bt_xml = os.path.join(bringup_dir, "behaviour_trees", "follow_path.xml")
+    to_pose_bt_xml = os.path.join(
+        get_package_share_directory("f1tenth_system"),
+        "behaviour_trees",
+        # 'plan_to_pose.xml')
+        # 'replan_to_pose.xml')
+        "replan_to_pose_and_follow.xml",
+    )
+    # 'replan_to_pose_and_follow.xml')
+    # 'follow_path.xml')
+
+    through_poses_bt_xml = os.path.join(
+        get_package_share_directory("f1tenth_system"),
+        "behaviour_trees",
+        "plan_through_poses_and_follow.xml",
+    )
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         "autostart": autostart,
         "default_nav_to_pose_bt_xml": to_pose_bt_xml,
         "default_nav_through_poses_bt_xml": through_poses_bt_xml,
-        
     }
 
     configured_params = RewrittenYaml(
@@ -87,7 +99,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         "params_file",
-        default_value=os.path.join(bringup_dir, "params", "nav.yaml"),
+        default_value=os.path.join(bringup_dir, "params", "nav_avoid.yaml"),
         description="Full path to the ROS2 parameters file to use for all launched nodes",
     )
 
