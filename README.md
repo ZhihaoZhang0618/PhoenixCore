@@ -21,7 +21,7 @@ Camera: didn't use right now
 
 IMU: fdilink Deta30
 
-Remote Controller: RadioMaster Pocket ELRS version
+Remote Controller: RadioMaster Pocket ELRS version (much better than XBOX series controller) 
 
 For more details about the hardware, please contact to the [KelvinLauMiau](https://github.com/KelvinLauMiau)
 #### VESC Interface
@@ -54,7 +54,10 @@ or
 ros2 launch f1tenth_system nav_avoid.launch.py
 # nav2 with avoidance launch file
 ```
+## Results
+My friends have been using this code for 19th F1TENTH Grand Prix at SM 2024. And we got the 3rd prize.
 
+![FPV](racing_fpv.mp4)
 ## Acknowledgement
 This project would not be possible without the use of multiple great open-sourced code bases as listed below:
 - [ForzaETH Race Stack](https://github.com/ForzaETH/race_stack)
@@ -73,3 +76,20 @@ This project would not be possible without the use of multiple great open-source
 
 
 ## Future Work
+- compare slam_toolbox with cartographer.
+- Use [global_racetrajectory_optimization](https://github.com/TUMFTM/global_racetrajectory_optimization) to optimize a fixed global path.
+- Use MPCC to track the path.
+- Use a better simulation environment, like ISAAC Lab, Autodrive.
+- Use RL to learn Emergency Brake Assist and Auto Overtake policies.
+
+
+
+
+
+
+
+
+
+
+
+
