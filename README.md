@@ -61,6 +61,9 @@ My friends have been using this code for 19th F1TENTH Grand Prix at SM 2024. And
     <img src="prize.jpg" width="400"/>
 </a>
 
+click picure to view the video
+
+
 ## Acknowledgement
 This project would not be possible without the use of multiple great open-sourced code bases as listed below:
 - [ForzaETH Race Stack](https://github.com/ForzaETH/race_stack)
