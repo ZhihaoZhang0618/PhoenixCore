@@ -57,7 +57,7 @@ ros2 launch f1tenth_system nav_avoid.launch.py
 ## Results
 My friends have been using this code for 19th F1TENTH Grand Prix at SM 2024. And we got the 3rd prize.
 
-<a href="https://www.bilibili.com/video/BV1cetieeE5o">
+<a href="https://www.youtube.com/watch?v=uXfa9ODQRoo">
     <img src="prize.jpg" width="400"/>
 </a>
 
