@@ -27,7 +27,7 @@ setup(
     install_requires=["setuptools"],
     zip_safe=True,
     maintainer="EleSheep",
-    maintainer_email="ZhizhaoZhang@gmail.com",
+    maintainer_email="zhangzhihao0618@gmail.com",
     description="TODO: Package description",
     license="MIT",
     extras_require={
